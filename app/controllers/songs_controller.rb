@@ -8,6 +8,7 @@ class SongsController < ApplicationController
   end
 
   def new
+    @genres = Genre.all
     @song = Song.new
   end
 
@@ -30,10 +31,11 @@ class SongsController < ApplicationController
 
     @song.update(song_params)
 
-    if @song.save
+    if @song.valid?
+      @song.save
       redirect_to @song
     else
-      render :edit
+      redirect_to edit_song_path(@song)
     end
   end
 
@@ -46,8 +48,10 @@ class SongsController < ApplicationController
 
   private
 
+  # def song_params
+  #   params.require(:song).permit(:title)
+  # end
   def song_params
-    params.require(:song).permit(:title)
-  end
+  params.require(:song).permit(:title, :artist_name, :genre_id, note_contents: [])
 end
-
+end
